@@ -1,6 +1,10 @@
 package nanoFuntas.qqsngServer;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
@@ -40,14 +44,35 @@ public class QQSNGServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		if(DEBUG) System.out.println(TAG + ": doPost");
-
-		PrintWriter out = null;
+		
+		String strInput = null;
+		
+		InputStream inStrm = null;
+		ObjectInputStream objInStrm = null;
+		OutputStream outStrm = null;
+		ObjectOutputStream objOutStrm = null;
+		
+		// get date from client
+		inStrm = request.getInputStream();
+		objInStrm = new ObjectInputStream(inStrm);
 		try {
-			out = response.getWriter();
-		} catch (IOException e1) {
-			e1.printStackTrace();
+			strInput = (String) objInStrm.readObject();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
+		if(strInput.equals("55")){
+			// write date to be sent to client
+			outStrm = response.getOutputStream();
+			objOutStrm = new ObjectOutputStream(outStrm);
+			objOutStrm.writeObject(new String("99"));
+			objOutStrm.flush();
+			objOutStrm.close();
+		}
+		//out.write(new String("99"));
+		
+		/*
 		String type = request.getParameter("REQ_TYPE");	
 		DatabaseService mDatabaseService = new DatabaseService();		
 		
@@ -62,6 +87,6 @@ public class QQSNGServlet extends HttpServlet {
 				out.print(5);
 			};			
 		}
+		*/
 	}
-
 }
