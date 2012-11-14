@@ -13,6 +13,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+
 /**
  * Servlet implementation class QQSNGServlet
  */
@@ -37,7 +41,7 @@ public class QQSNGServlet extends HttpServlet {
 		PrintWriter out = response.getWriter();	
 		out.write("1");
 	}
-
+	
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
@@ -45,32 +49,48 @@ public class QQSNGServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		if(DEBUG) System.out.println(TAG + ": doPost");
 		
-		String strInput = null;
+		String strReq = null;
 		
-		InputStream inStrm = null;
-		ObjectInputStream objInStrm = null;
-		OutputStream outStrm = null;
-		ObjectOutputStream objOutStrm = null;
+		//test
+		String strToSend = new String("77");		
+		JSONObject jsonReq = null;
 		
-		// get date from client
-		inStrm = request.getInputStream();
-		objInStrm = new ObjectInputStream(inStrm);
+		//strReq = getStrReq(request);
+		//jsonReq = getJsonReq(request);
+		String type = null;
+		
+		jsonReq = new JSONObject();
 		try {
-			strInput = (String) objInStrm.readObject();
-		} catch (ClassNotFoundException e) {
+			jsonReq.put("RSP_TYPE", "RSP_TYPE_FETCH_SELF_INFO");
+		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		if(strInput.equals("55")){
-			// write date to be sent to client
-			outStrm = response.getOutputStream();
-			objOutStrm = new ObjectOutputStream(outStrm);
-			objOutStrm.writeObject(new String("99"));
-			objOutStrm.flush();
-			objOutStrm.close();
+		sendJsonRsp(response, jsonReq);
+		
+		/*
+		try {
+			type = jsonReq.getString("REQ_TYPE");
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		//out.write(new String("99"));
+		*/
+		/*
+		if(type.equals("FETCH_SELF_INFO")){
+			JSONObject jsonRsp = new JSONObject();
+			try {
+				jsonRsp.put("RSP_TYPE", "RSP_TYPE_FETCH_SELF_INFO");
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			
+			sendJsonRsp(response, jsonRsp);
+		}
+		*/
 		
 		/*
 		String type = request.getParameter("REQ_TYPE");	
@@ -88,5 +108,73 @@ public class QQSNGServlet extends HttpServlet {
 			};			
 		}
 		*/
+	}
+	
+	private void sendStrRsp(HttpServletResponse response, String strToSend) {
+		OutputStream outStrm = null;
+		ObjectOutputStream objOutStrm = null;
+		
+		// write date to be sent to client
+		try{
+			outStrm = response.getOutputStream();
+			objOutStrm = new ObjectOutputStream(outStrm);
+			objOutStrm.writeObject(strToSend);
+			objOutStrm.flush();
+		} catch (IOException e){
+			e.printStackTrace();
+		} catch (Exception e){
+			e.printStackTrace();
+		} finally{
+			// release resources
+			try{
+				if(outStrm != null) outStrm.close();
+				if(objOutStrm != null) objOutStrm.close();
+			} catch (Exception e){
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	private void sendJsonRsp(HttpServletResponse response, JSONObject jsonToSend) {
+		String jsonStr = null;
+		jsonStr = jsonToSend.toString();
+		sendStrRsp(response, jsonStr);
+	}
+	
+	private String getStrReq(HttpServletRequest request) {
+		String strReq = null;		
+		InputStream inStrm = null;
+		ObjectInputStream objInStrm = null;
+		
+		// get date from client
+		try {
+			inStrm = request.getInputStream();
+			objInStrm = new ObjectInputStream(inStrm);
+			strReq = (String) objInStrm.readObject();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e){			
+			e.printStackTrace();
+		} finally {
+			// release resources
+			try{
+				if(inStrm != null) inStrm.close();
+				if(objInStrm != null) objInStrm.close();
+			} catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+
+		return strReq;
+	}
+
+	private String getJsonReq(HttpServletRequest request){
+		String strReq = null;
+		JSONObject jsonReq = null;
+		//strReq = getStrReq(request);
+		
+		//jsonReq = new JSONObject();
+		
+		return "1";
 	}
 }
