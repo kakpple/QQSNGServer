@@ -6,6 +6,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,9 +14,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 
 /**
  * Servlet implementation class QQSNGServlet
@@ -46,28 +46,27 @@ public class QQSNGServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		if(DEBUG) System.out.println(TAG + ": doPost");
+		if(DEBUG) System.out.println(TAG + ": doPost");						
 		
-		String strReq = null;
-		
-		//test
-		String strToSend = new String("77");		
-		JSONObject jsonReq = null;
-		
-		//strReq = getStrReq(request);
-		//jsonReq = getJsonReq(request);
 		String type = null;
 		
-		jsonReq = new JSONObject();
-		try {
-			jsonReq.put("RSP_TYPE", "RSP_TYPE_FETCH_SELF_INFO");
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		JSONObject mJsonReq = getJsonReq(request);
+		String mReqType = (String) mJsonReq.get("REQ_TYPE");
+		if(DEBUG) System.out.println(TAG + ", " + mReqType);	
 		
-		sendJsonRsp(response, jsonReq);
+		if(mReqType.equals("FETCH_SELF_INFO")){
+			JSONObject jsonRsp = new JSONObject();
+			jsonRsp.put("RSP_TYPE", "RSP_TYPE_FETCH_SELF_INFO");
+			
+			StringWriter sw = new StringWriter();
+			jsonRsp.writeJSONString(sw);
+			String s = sw.toString();
+			
+			String ss = jsonRsp.toString();
+			
+			sendStrRsp(response, ss);
+		}
+			
 		
 		/*
 		try {
@@ -134,12 +133,14 @@ public class QQSNGServlet extends HttpServlet {
 			}
 		}
 	}
-	
+
+	/*
 	private void sendJsonRsp(HttpServletResponse response, JSONObject jsonToSend) {
 		String jsonStr = null;
 		jsonStr = jsonToSend.toString();
 		sendStrRsp(response, jsonStr);
 	}
+	*/
 	
 	private String getStrReq(HttpServletRequest request) {
 		String strReq = null;		
@@ -167,14 +168,14 @@ public class QQSNGServlet extends HttpServlet {
 
 		return strReq;
 	}
-
-	private String getJsonReq(HttpServletRequest request){
+	
+	
+	private JSONObject getJsonReq(HttpServletRequest request){
 		String strReq = null;
 		JSONObject jsonReq = null;
-		//strReq = getStrReq(request);
+		strReq = getStrReq(request);
+		jsonReq = (JSONObject) JSONValue.parse(strReq);
 		
-		//jsonReq = new JSONObject();
-		
-		return "1";
+		return jsonReq;
 	}
 }
