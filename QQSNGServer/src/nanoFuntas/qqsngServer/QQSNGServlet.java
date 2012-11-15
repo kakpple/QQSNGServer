@@ -47,68 +47,38 @@ public class QQSNGServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		if(DEBUG) System.out.println(TAG + ": doPost");						
-		
-		String type = null;
-		
-		JSONObject mJsonReq = getJsonReq(request);
-		String mReqType = (String) mJsonReq.get("REQ_TYPE");
+				
+		// get JSON parameters
+		JSONObject jsonReq = getJsonReq(request);
+		String mReqType = (String) jsonReq.get("REQ_TYPE");
 		if(DEBUG) System.out.println(TAG + ", " + mReqType);	
 		
-		if(mReqType.equals("FETCH_SELF_INFO")){
-			JSONObject jsonRsp = new JSONObject();
-			jsonRsp.put("RSP_TYPE", "RSP_TYPE_FETCH_SELF_INFO");
-			
-			StringWriter sw = new StringWriter();
-			jsonRsp.writeJSONString(sw);
-			String s = sw.toString();
-			
-			String ss = jsonRsp.toString();
-			
-			sendStrRsp(response, ss);
-		}
-			
+		// set JSON parameter to send
+		JSONObject jsonRsp = new JSONObject();
 		
-		/*
-		try {
-			type = jsonReq.getString("REQ_TYPE");
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		*/
-		/*
-		if(type.equals("FETCH_SELF_INFO")){
-			JSONObject jsonRsp = new JSONObject();
-			try {
-				jsonRsp.put("RSP_TYPE", "RSP_TYPE_FETCH_SELF_INFO");
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			
-			sendJsonRsp(response, jsonRsp);
-		}
-		*/
-		
-		/*
-		String type = request.getParameter("REQ_TYPE");	
 		DatabaseService mDatabaseService = new DatabaseService();		
 		
-		if(type.equals("FETCH_SELF_INFO")){
+		if(mReqType.equals("FETCH_SELF_INFO")){
 			String selfID = request.getParameter("SELF_ID");
 			if( mDatabaseService.isUserRegistered(selfID) ){
 				if(DEBUG) System.out.println(TAG + ": isUserRegistered == true");
-				out.print(1);
+				jsonRsp.put("RSP_TYPE", "USER_REGISTERED");
+				sendJsonRsp(response, jsonRsp);
 			} else {
 				if(DEBUG) System.out.println(TAG + ": isUserRegistered == false");
-				mDatabaseService.registerUser(selfID);
-				out.print(5);
-			};			
+				mDatabaseService.registerUser(selfID);	
+				jsonRsp.put("RSP_TYPE", "USER_NOT_REGISTERED");
+				sendJsonRsp(response, jsonRsp);
+			};
 		}
-		*/
 	}
 	
+	/*
+	 * Function sendStrRsp sends String data to client as response
+	 * 
+	 * @response this parameter is passed from HttpServletResponse response in function doPost()
+	 * @strToSend String data to be sent to client
+	 */
 	private void sendStrRsp(HttpServletResponse response, String strToSend) {
 		OutputStream outStrm = null;
 		ObjectOutputStream objOutStrm = null;
@@ -133,15 +103,24 @@ public class QQSNGServlet extends HttpServlet {
 			}
 		}
 	}
-
 	/*
+	 * Function sendJsonRsp sends JSONObject data to client and wraps function sendStrRsp.
+	 * 
+	 * @response, this parameter is passed from HttpServletResponse response in function doPost()
+	 * @jsonToSend, JSONObject data to be sent to client
+	 */
 	private void sendJsonRsp(HttpServletResponse response, JSONObject jsonToSend) {
 		String jsonStr = null;
 		jsonStr = jsonToSend.toString();
 		sendStrRsp(response, jsonStr);
-	}
-	*/
+	}	
 	
+	/*
+	 * Function getStrReq extracts String data from request(HttpServletRequest request) parameter in doPost function, and return it.
+	 * 
+	 * @request, this parameter is passed from HttpServletRequest request in function doPost()
+	 * @return, return String extracted from client request
+	 */
 	private String getStrReq(HttpServletRequest request) {
 		String strReq = null;		
 		InputStream inStrm = null;
@@ -169,7 +148,13 @@ public class QQSNGServlet extends HttpServlet {
 		return strReq;
 	}
 	
-	
+	/*
+	 * Function getJsonReq extracts JSONObject data from request(HttpServletRequest request) parameter in doPost function, and return it.
+	 * Function getJsonReq wraps function getStrReq.
+	 * 
+	 * @request, this parameter is passed from HttpServletRequest request in function doPost()
+	 * @return, return JSONObject extracted from client request
+	 */
 	private JSONObject getJsonReq(HttpServletRequest request){
 		String strReq = null;
 		JSONObject jsonReq = null;
