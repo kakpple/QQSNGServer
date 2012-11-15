@@ -46,7 +46,7 @@ public class QQSNGServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if(DEBUG) System.out.println(TAG + ": doPost");						
+		if(DEBUG) System.out.println(TAG + ": doPost()");						
 				
 		// get JSON parameters
 		JSONObject jsonReq = getJsonReq(request);
@@ -59,7 +59,9 @@ public class QQSNGServlet extends HttpServlet {
 		DatabaseService mDatabaseService = new DatabaseService();		
 		
 		if(mReqType.equals("FETCH_SELF_INFO")){
-			String selfID = request.getParameter("SELF_ID");
+			String selfID = (String) jsonReq.get("SELF_ID");
+			if(DEBUG) System.out.println(TAG + ", selfID =  " + selfID);	
+			
 			if( mDatabaseService.isUserRegistered(selfID) ){
 				if(DEBUG) System.out.println(TAG + ": isUserRegistered == true");
 				jsonRsp.put("RSP_TYPE", "USER_REGISTERED");
@@ -80,6 +82,8 @@ public class QQSNGServlet extends HttpServlet {
 	 * @strToSend String data to be sent to client
 	 */
 	private void sendStrRsp(HttpServletResponse response, String strToSend) {
+		if(DEBUG) System.out.println(TAG + ": sendStrRsp()");						
+		
 		OutputStream outStrm = null;
 		ObjectOutputStream objOutStrm = null;
 		
@@ -110,6 +114,8 @@ public class QQSNGServlet extends HttpServlet {
 	 * @jsonToSend, JSONObject data to be sent to client
 	 */
 	private void sendJsonRsp(HttpServletResponse response, JSONObject jsonToSend) {
+		if(DEBUG) System.out.println(TAG + ": sendJsonRsp()");						
+		
 		String jsonStr = null;
 		jsonStr = jsonToSend.toString();
 		sendStrRsp(response, jsonStr);
@@ -122,6 +128,8 @@ public class QQSNGServlet extends HttpServlet {
 	 * @return, return String extracted from client request
 	 */
 	private String getStrReq(HttpServletRequest request) {
+		if(DEBUG) System.out.println(TAG + ": getStrReq()");						
+		
 		String strReq = null;		
 		InputStream inStrm = null;
 		ObjectInputStream objInStrm = null;
@@ -156,6 +164,8 @@ public class QQSNGServlet extends HttpServlet {
 	 * @return, return JSONObject extracted from client request
 	 */
 	private JSONObject getJsonReq(HttpServletRequest request){
+		if(DEBUG) System.out.println(TAG + ": getJsonReq()");						
+		
 		String strReq = null;
 		JSONObject jsonReq = null;
 		strReq = getStrReq(request);

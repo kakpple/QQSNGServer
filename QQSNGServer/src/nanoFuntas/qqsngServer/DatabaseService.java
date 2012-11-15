@@ -8,18 +8,20 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class DatabaseService {
-	Connection conn = null;
-	final String url = "jdbc:mysql://localhost:3306/QQSNGDB";
-	final String user = "QQSNGAdmin";
-	final String password = "qqsngserver1110";
 	boolean DEBUG = true;
 	final String TAG = "DataBaseService";
 	
+	final String url = "jdbc:mysql://localhost:3306/QQSNGDB";
+	final String user = "QQSNGAdmin";
+	final String password = "qqsngserver1110";
+	
+	Connection conn = null;
+	
 	private Connection getDBConnection(){
-		if(DEBUG) System.out.println(TAG + ": getDBConnection");
+		if(DEBUG) System.out.println(TAG + ": getDBConnection()");
 		
 		if(conn == null){
-			if(DEBUG) System.out.println(TAG + ": conn == null");
+			if(DEBUG) System.out.println(TAG + "getDBConnection(), conn == null");
 			
 			try {
 				Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -41,8 +43,7 @@ public class DatabaseService {
 				e.printStackTrace();
 			}
 		} else{
-			if(DEBUG) System.out.println(TAG + ": getDBConnection, conn != null");
-			// added 
+			if(DEBUG) System.out.println(TAG + ": getDBConnection(), conn != null");
 			
 			try {
 				conn = DriverManager.getConnection(url, user, password);
@@ -56,8 +57,8 @@ public class DatabaseService {
 	}
 
 	public boolean isUserRegistered(String selfID){
-		if(DEBUG) System.out.println(TAG + ": isUserRegistered");
-
+		if(DEBUG) System.out.println(TAG + ": isUserRegistered()");
+		
 		Statement st = null;
 		ResultSet rs = null;
 		boolean result = false;
@@ -79,7 +80,7 @@ public class DatabaseService {
 			try{
 				if(rs != null) rs.close();
 				if(st != null) st.close();
-				if(conn != null) { conn.close(); if(DEBUG) System.out.println(TAG + ": isUserRegistered, conn !=null"); }
+				if(conn != null) conn.close();
 			} catch (Exception e){
 				e.printStackTrace();
 			}
@@ -88,7 +89,7 @@ public class DatabaseService {
 	}
 	
 	public int registerUser(String selfID){
-		if(DEBUG) System.out.println(TAG + ": registerUser(selfID)");
+		if(DEBUG) System.out.println(TAG + ": registerUser()");
 		PreparedStatement ps = null;
 		conn = getDBConnection();
 		int result = 1;
