@@ -58,6 +58,17 @@ public class QQSNGServlet extends HttpServlet {
 		
 		DatabaseService mDatabaseService = new DatabaseService();		
 		
+		if(mReqType.equals("REQ_SELF_INFO")){
+			String selfID = (String) jsonReq.get("SELF_ID");			
+			jsonRsp.put("RSP_TYPE", "RSP_SELF_INFO");
+			jsonRsp.put("HEART", 5);
+			jsonRsp.put("SCORE", 345);
+			jsonRsp.put("GOLD", 12);
+			
+			sendJsonRsp(response, jsonRsp);
+		}
+		
+		/*
 		if(mReqType.equals("FETCH_SELF_INFO")){
 			String selfID = (String) jsonReq.get("SELF_ID");
 			if(DEBUG) System.out.println(TAG + ", selfID =  " + selfID);	
@@ -73,6 +84,7 @@ public class QQSNGServlet extends HttpServlet {
 				sendJsonRsp(response, jsonRsp);
 			};
 		}
+		*/
 	}
 	
 	/*
