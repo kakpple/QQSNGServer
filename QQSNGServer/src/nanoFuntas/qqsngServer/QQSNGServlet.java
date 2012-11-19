@@ -48,21 +48,49 @@ public class QQSNGServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		if(DEBUG) System.out.println(TAG + ": doPost()");						
 				
-		// get JSON parameters
+		// get JSON request parameters
 		JSONObject jsonReq = getJsonReq(request);
 		String mReqType = (String) jsonReq.get("REQ_TYPE");
 		if(DEBUG) System.out.println(TAG + ", " + mReqType);	
+		if(DEBUG) System.out.println(TAG + ", " + jsonReq.toString());	
 		
 		// set JSON parameter to send
 		JSONObject jsonRsp = new JSONObject();
 			
 		if(mReqType.equals("REQ_SELF_INFO")){
 			String selfID = (String) jsonReq.get("SELF_ID");			
+			// set jsonRsp header
 			jsonRsp.put("RSP_TYPE", "RSP_SELF_INFO");
+			
 			jsonRsp.put("SELF_ID", selfID);
 			jsonRsp.put("HEART", 5);
-			jsonRsp.put("SCORE", 345);
-			jsonRsp.put("GOLD", 12);
+			jsonRsp.put("SCORE", 6);
+			jsonRsp.put("GOLD", 6);
+			
+			sendJsonRsp(response, jsonRsp);
+			
+		}else if(mReqType.equals("REQ_FRIENDS_INFO")){
+			// Number of friends is JSON size - 1, here -1 is performed because size of Header(REP_TYPE) which is 1 need to be subtracted
+			int NumOfFriends = jsonReq.size() - 1;
+			JSONObject[] jsonFriend = new JSONObject[NumOfFriends + 1];
+			for(int i = 0; i <= NumOfFriends; i++){
+				jsonFriend[i] = new JSONObject();
+			}
+			
+			// set jsonRsp header
+			jsonRsp.put("RSP_TYPE", "RSP_FRIENDS_INFO");
+			
+			for(int i = 1; i <= NumOfFriends; i++){
+				String friendId = (String) jsonReq.get(Integer.toString(i));
+				if(DEBUG) System.out.println(TAG + ", " + friendId );
+				// TODO friend id process
+				jsonFriend[i].put("FRIEND_ID", friendId);
+				jsonFriend[i].put("HEART", 10);
+				jsonFriend[i].put("SCORE", 11);
+				jsonFriend[i].put("GOLD", 12);
+				
+				jsonRsp.put(i, jsonFriend[i]);				
+			}
 			
 			sendJsonRsp(response, jsonRsp);
 		}
