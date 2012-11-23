@@ -6,7 +6,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.io.StringWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -55,7 +54,7 @@ public class QQSNGServlet extends HttpServlet {
 		sendJsonRsp(response, jsonRsp);
 	}
 	
-	/*
+	/**
 	 * Function sendStrRsp sends String data to client as response
 	 * 
 	 * @response this parameter is passed from HttpServletResponse response in function doPost()
@@ -88,7 +87,7 @@ public class QQSNGServlet extends HttpServlet {
 		}
 	}
 		
-	/*
+	/**
 	 * Function getStrReq extracts String data from request(HttpServletRequest request) parameter in doPost function, and return it.
 	 * 
 	 * @request, this parameter is passed from HttpServletRequest request in function doPost()
@@ -123,7 +122,7 @@ public class QQSNGServlet extends HttpServlet {
 		return strReq;
 	}
 
-	/*
+	/**
 	 * Function sendJsonRsp sends JSONObject data to client and wraps function sendStrRsp.
 	 * 
 	 * @response, this parameter is passed from HttpServletResponse response in function doPost()
@@ -137,7 +136,7 @@ public class QQSNGServlet extends HttpServlet {
 		sendStrRsp(response, jsonStr);
 	}	
 	
-	/*
+	/**
 	 * Function getJsonReq extracts JSONObject data from request(HttpServletRequest request) parameter in doPost function, and return it.
 	 * Function getJsonReq wraps function getStrReq.
 	 * 

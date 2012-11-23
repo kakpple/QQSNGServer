@@ -1,7 +1,9 @@
 package nanoFuntas.qqsngServer;
 
 import org.json.simple.JSONObject;
-
+/**
+ * This DataHandler class receives data from servlet and handle data and finally returns data to servlet 
+ */
 public class DataHandler {
 	private static boolean DEBUG = true;
 	private static String TAG = "DataHandler";
@@ -22,8 +24,10 @@ public class DataHandler {
 	private static final String STAT_CODE_OK = "STAT_CODE_OK";
 	
 	/**
-	 * @param jsonReq
-	 * @return
+	 * This handleData function handles data received from servlet and returns result data to servlet
+	 * 
+	 * @param jsonReq, JSONObject received from servlet
+	 * @return JSONObject result data to servlet
 	 */
 	public static JSONObject handleData(JSONObject jsonReq) {
 		String mReqType = (String) jsonReq.get(DataHandler.REQ_TYPE);
