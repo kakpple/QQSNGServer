@@ -70,6 +70,7 @@ jsonFriendsInfo.put(i, jsonFriend[i]);
 Client Action: update score
 JSONObject jsonUpdateScore
 { "RSP_TYPE" : "RSP_UPDATE_SCORE",
+"SELF_ID": "usernamehere"  // Rex, I need user info.
 "SCORE" : 76 }
 
 Example:
