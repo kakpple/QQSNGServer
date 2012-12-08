@@ -1,0 +1,85 @@
+1. request self info
+------------------------------
+Client Action: request self info
+JSONObject jsonSelfId
+{ "REQ_TYPE" : "REQ_SELF_INFO", 
+"SELF_ID" : selfId(String type) }
+
+Example:
+jsonSelfID.put("REQ_TYPE", "REQ_SELF_INFO");
+jsonSelfID.put("SELF_ID", selfId);
+// here selfId is String type
+
+Server Action return self info
+JSONObject jsonSelfInfo
+{ "RSP_TYPE" : "RSP_SELF_INFO",
+"HEART" : 5,
+"SCORE" : 45,
+"GOLD" : 7 }
+//"HEART" : 5, Looks like here 5 is recognized as Long Type.
+
+Example:
+jsonSelfInfo.put("RSP_TYPE", "RSP_SELF_INFO");
+jsonSelfInfo.put("HEART", 5);
+jsonSelfInfo.put("SCORE", 45);
+jsonSelfInfo.put("GOLD", 7);
+-------------------------------
+
+2. request friends info
+-------------------------------
+Client Action: request friends info
+JSONObject jsonFriendsId
+{ "REQ_TYPE" : "REQ_FRIENDS_INFO",
+1 : friendID1,
+2 : friendID2,
+3 : friendID3,
+¡¦}
+// here friendId is String type
+
+Example:
+jsonFriendsId.put("REQ_TYPE" : "REQ_FRIENDS_INFO");
+String[] strFriendId = new String[NumOfFriends]
+for(i = 0; i < NumOfFriends; i++)
+jsonFriendsId.put(i : strFriendId[i]);
+
+Server Action: return friends info
+JSONObject jsonFriendsInfo
+{ "RSP_TYPE" : "RSP_FRIENDS_INFO", 
+1 : {"FRIEND_ID": friendId, "HEART":4, "SCORE":3, "GOLD":7},
+2 : {"FRIEND_ID": friendId, "HEART":4, "SCORE":3, "GOLD":7},
+3 : {"FRIEND_ID": friendId, "HEART":4, "SCORE":3, "GOLD":7},
+¡¦ ¡¦ }
+JSONObject jsonFriend
+{"FRIEND_ID": friendId, "HEART":4, "SCORE":3, "GOLD":7}
+
+Example:
+jsonFriendsInfo.put("RSP_TYPE", "RSP_FRIENDS_INFO");
+JSONObject[] jsonFriend = new JSONObject[NumOfFriends];
+for(i = 0; i< NumOfFriends){
+String strFriendId = jsonFriendId.get(i);
+jsonFriend[i].put("FRIEND_ID", strFriendId);
+jsonFriend[i].put("HEART", getHeart());
+jsonFriend[i].put("SCORE", getScore());
+jsonFriend[i].put("GOLD", getGold());
+jsonFriendsInfo.put(i, jsonFriend[i]);
+}
+-------------------------------
+
+3. update score
+-------------------------------
+Client Action: update score
+JSONObject jsonUpdateScore
+{ "RSP_TYPE" : "RSP_UPDATE_SCORE",
+"SELF_ID": "usernamehere"  // Rex, I need user info.
+"SCORE" : 76 }
+
+Example:
+jsonUpdateScore.put("RSP_TYPE" : "REQ_UPDATE_SCORE");
+jsonUpdateScore.put("SCORE" : 76);
+
+Server Action option1: No Action, just update the score
+Server Action option2: return client status code implying success or failure
+JSONObject jsonReturnStat
+{ "RSP_TYPE" : "RSP_RETURN_STAT", 
+"STATUS" : true / false }
+-------------------------------
