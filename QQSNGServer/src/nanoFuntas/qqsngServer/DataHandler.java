@@ -68,7 +68,7 @@ public class DataHandler {
 				// TODO friend id process
 				jsonFriend[i].put(DataHandler.FRIEND_ID, friendId);
 				jsonFriend[i].put(DataHandler.HEART, 10);
-				jsonFriend[i].put(DataHandler.SCORE, 11);
+				jsonFriend[i].put(DataHandler.SCORE, (long)i);
 				jsonFriend[i].put(DataHandler.GOLD, 12);
 				
 				jsonRsp.put(i, jsonFriend[i]);				
