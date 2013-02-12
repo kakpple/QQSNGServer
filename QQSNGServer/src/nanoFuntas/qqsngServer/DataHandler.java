@@ -22,6 +22,9 @@ public class DataHandler {
 	private static final String RSP_SOCRE_UPDATE = "RSP_SOCRE_UPDATE";
 	private static final String STAT_CODE = "STAT_CODE";
 	private static final String STAT_CODE_OK = "STAT_CODE_OK";
+	private static final String REQ_HEART_UPDATE = "REQ_HEART_UPDATE";
+	private static final String RSP_HEART_UPDATE = "RSP_HEART_UPDATE";
+	
 	
 	/**
 	 * This handleData function handles data received from servlet and returns result data to servlet
@@ -76,18 +79,24 @@ public class DataHandler {
 			
 			//sendJsonRsp(response, jsonRsp);
 		} else if (mReqType.equals(DataHandler.REQ_SCORE_UPDATE)){
+			String selfId = (String) jsonReq.get(DataHandler.SELF_ID);
 			double score = (Double) jsonReq.get(DataHandler.SCORE);			
-			if(DEBUG) System.out.println(TAG + ", score: " + Double.toString(score) );
+			if(DEBUG) System.out.println(TAG + ", selfId: " + selfId );
+			if(DEBUG) System.out.println(TAG + ", score: " + Double.toString(score) );			
 			
 			jsonRsp.put(DataHandler.RSP_TYPE, DataHandler.RSP_SOCRE_UPDATE);
 			jsonRsp.put(DataHandler.STAT_CODE, DataHandler.STAT_CODE_OK);
 			
 			//sendJsonRsp(response, jsonRsp);
-		}
+		} 
+		//else if(mReqType.equals(DataHandler.REQ_HEART_UPDATE){
+		//	String selfID = (String) jsonReq.get(DataHandler.SELF_ID);	
+		//}
 		return jsonRsp;
 		
-		/*
 		
+		
+		/*
 		DatabaseService mDatabaseService = new DatabaseService();		
 
 		if(mReqType.equals("FETCH_SELF_INFO")){
